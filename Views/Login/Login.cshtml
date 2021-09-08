@@ -1,0 +1,63 @@
+﻿@model CRUDPRACTICAL.Models.Login
+
+@{
+    ViewData["Title"] = "Login";
+    var employeeError = (bool)TempData["Issuccess-Error"];
+}
+<h1>Employee Login</h1>
+
+@if (employeeError == true) 
+{
+    <div id="btn-close" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Something went wrong....</strong> 
+        <button type="button" id="btn" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn").click(function () {
+                $("#btn-close").toggle();
+            });
+        });
+    </script>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @* <input type="hidden" asp-for="EmployeeId" />
+            *@
+
+            <div class="form-row">
+                <div class="form-group col-md-9">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-9">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-9">
+                    <input type="submit" value="Login" class="btn btn-primary btn-block" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

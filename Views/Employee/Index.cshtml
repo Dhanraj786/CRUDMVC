@@ -1,0 +1,184 @@
+﻿@*@model IEnumerable<CRUDPRACTICAL.Models.Employee>*@
+@model ReflectionIT.Mvc.Paging.PagingList<CRUDPRACTICAL.Models.Employee>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper*, ReflectionIT.Mvc.Paging
+
+
+
+@{
+    ViewData["Title"] = "Index";
+    var employeeSave = (bool)TempData["Issuccess-save"];
+    var employeeData = (bool)TempData["Issuccess-delete"];
+    var employeeEdit = (bool)TempData["Issuccess"];
+    var employeeLogin = (bool)TempData["Issuccess-Login"];
+}
+
+<h4>Employee Listing</h4>
+
+
+
+
+@*<nav aria-label="Employee Paging">
+        @await this.Component.InvokeAsync("Pager",new {PagingList=this.Model})
+    </nav>
+*@
+
+@if (employeeSave == true)
+{
+    <div id="btn-close" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulation!</strong> Your Employees Data has been Saved...
+        <button type="button" id="btn" class="btn-close" data-bs-dismiss="alert" onclick="showhide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+@if (employeeEdit == true)
+{
+    <div id="btn-close" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulation!</strong> Your Employees Data has been Updated...
+        <button type="button" id="btn" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+@if (employeeData == true)
+{
+    <div id="btn-close" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Congratulation!</strong> Your Employees Data has been Deleted...
+        <button type="button" id="btn" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+@if (employeeLogin == true)
+{
+    <div id="btn-close" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulation!</strong> Your Employees has been Login....
+        <button type="button" id="btn" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn").click(function () {
+                $("#btn-close").toggle();
+            });
+        });
+
+        function PagerClick(index) {
+         @*   debugger;*@
+            document.getElementById("hfPageIndex").value = index;
+            document.forms[0].submit();
+        }
+    </script>
+}
+
+
+<div style="text-align:center">
+    <a asp-action="Create" class="btn btn-success"><i class="far fa-plus-square"></i>Create</a>
+</div>
+<br />
+<br />
+<form method="get" asp-action="Index">
+    <p>
+        <input type="search" placeholder="Enter Fullname or Position..." value="@ViewData["Getemployeedetails"]" name="Empsearch" style="width:500px;" />
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </p>
+
+
+    <table class="table table-hover" border="1">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().EmpCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Position)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().OfficeLocation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Gender)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Email)
+                </th>
+                @* <th>
+                        @Html.DisplayNameFor(model => model.First().Password)
+                    </th>*@
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmpCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Position)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OfficeLocation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    @*  <td>
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>*@
+                    <td>
+                        <a asp-action="Edit" class="btn btn-dark" asp-route-id="@item.EmployeeId">Edit</a> |
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.EmployeeId">Delete</a>
+                    </td>
+                </tr>
+            }
+
+
+
+        </tbody>
+    </table>
+    <input type="hidden" id="hfPageIndex" name="currentPageIndex" />
+
+    <table cellpadding="5" cellspacing="10" border="1">
+        <tr>
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <td>
+                    @if (i != Model.PageIndex)
+                    {
+                        <a href="javascript:PagerClick('@i');">@i</a>
+                    }
+                    else
+                    {
+                        <span>@i</span>
+                    }
+                </td>
+            }
+        </tr>
+    </table>
+</form>
